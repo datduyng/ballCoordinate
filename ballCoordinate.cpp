@@ -1,4 +1,5 @@
 #include "ballCoordinate.h"
+#include <CameraArmDriver.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <arduino.h>
@@ -11,7 +12,13 @@ uint8_t* simpleCoordinate;
 int16_t* y;
 int16_t* z;
 
-bool getDataStream(void){
+int row1[MAXAPPLE];
+int row2[MAXAPPLE];
+int numOfTrig; 
+
+
+bool getDataStream(int cameraPos){
+  numOfTrig ++; 
   // code Reuse from last year competition
 
   //first clear all data in the struct
@@ -19,8 +26,13 @@ bool getDataStream(void){
 
   // Serial Communication with Raspberry Pi on Serial port 1 begins
   Serial.begin(115200);
+  int sonaOffset = sonarDistComparator();
+  // int cameraPos = getCameraFacePosition();
+  char package[30];
 
-  Serial.println("GO");
+  //don't trust reading if sonaroffset is 1111 or -1111 
+  sprintf(package,";%d;%d;",sonaOffset,cameraPos);
+  Serial.println(package);
 
   while(Serial.available() == 0 ){}
 
@@ -52,12 +64,7 @@ bool parseData(void){
   //store number of coordinate is passing
   numOfPoint = atoi(stringToken[0]);
 
-  // exit if receive bad data;
-  //TODO: added more validation
-  if(numOfPoint > 2 || numOfPoint < 1) {
-    //sSerial.println("fail in parse");
-    return false;
-  }
+  //TODO: error checking
 
   //set dynamic array size.
   //create dynamic array size.
@@ -65,10 +72,9 @@ bool parseData(void){
   color = (uint8_t*) malloc(sizeof(uint8_t) * numOfPoint);
   y = (int16_t*) malloc(sizeof(int16_t) * numOfPoint);
   z = (int16_t*) malloc(sizeof(int16_t) * numOfPoint);
-
   // transformation from pixel coordinate relative to the camera
-  // To coordinate that respect to the Robot Arm 
-  
+  // To coordinate that respect to the Robot Arm
+
   char **pointToken = NULL;
   for(int i = 0;i < numOfPoint; i++){
     uint8_t n = 0 ;// dummies varable for debug or output valiedation
@@ -106,7 +112,7 @@ void printSimplePoint(){
 }
 
 void transformation(double *xVal, double *yVal,const double zVal){
-	// convert to real inches value from pixel 
+	// convert to real inches value from pixel
 }
 
 bool parseSimpleData(void){
@@ -117,7 +123,7 @@ bool parseSimpleData(void){
 
   //store number of coordinate is passing
   numOfPoint = atoi(stringToken[0]);
-  
+
   // exit if receive bad data;
   //TODO: added more validation
   if(numOfPoint > 2 || numOfPoint < 1) {
@@ -151,7 +157,7 @@ bool parseSimpleData(void){
   free(pointToken);
   for(int i = 0; i < numOfPoint; i++) free(stringToken[i]);
   free(stringToken);
-	
+
   return true;
 }
 
@@ -185,3 +191,9 @@ char * deepCopy(const char *s) {
   strcpy(copy, s);
   return copy;
 }
+
+// float * deepCopyFloat(const float *s) {
+//   float *copy = (float *) malloc( (strlen(s) + 1) * sizeof(float) );
+//   strcpy(copy, s);
+//   return copy;
+// }

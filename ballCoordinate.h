@@ -31,7 +31,9 @@
 #include "stdint.h"
 #include "stdlib.h"
 #include <Arduino.h>
+#include<Driving.h>
 
+#define MAXAPPLE 9
 #define DATALENGTH 100
 
 extern char dataStream[DATALENGTH];
@@ -39,9 +41,14 @@ extern uint8_t* color;
 extern uint8_t* simpleCoordinate;
 extern int16_t * y;
 extern int16_t* z;
+extern uint8_t column;
 extern uint8_t numOfPoint;
 
-
+/******************score keeper counter*****************/
+extern int row1[MAXAPPLE];
+extern int row2[MAXAPPLE];
+extern int currentZone; 
+extern int numOfTrig; 
 /**Constant**/
 // Raspbery pi info
 #define SCREEN_WIDTH 720.00
@@ -49,6 +56,14 @@ extern uint8_t numOfPoint;
 #define X_CAMERA_TO_ARM 4.47401575
 #define Y_CAMERA_TO_ARM 6.4125
 
+const float L_COOR_X1[3] = {-5.7,2.8,7.5};
+const float L_COOR_X2[3] = {-5.0,2.9,10.5};
+const float L_COOR_X3[3] = {-5.2,5.5,12.0};
+const float L_COOR_X4[3] = {-5.7,7.0,9.1};
+const float L_COOR_DROP[3] = {-5.0,9.0,10.5};
+const float L_COOR_BASKET[3] = {-5.7,7.0,9.1};
+
+// TODO: delete these .
 #define COOR_X_1 -5.7
 #define COOR_Y_1 2.8
 #define COOR_Z_1 7.5
@@ -86,7 +101,7 @@ void printSimplePoint(void);
  * data in dataStream char array  variable(gloabl variable)
  * return 1 if valid dataStream length got recieve
  */
-bool getDataStream(void);
+bool getDataStream(int cameraPos);
 
 /**
  *This function will parse data by using split function
