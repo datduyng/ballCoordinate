@@ -1,3 +1,4 @@
+
 #include "ballCoordinate.h"
 #include <CameraArmDriver.h>
 #include <stdlib.h>
@@ -203,8 +204,4 @@ char * deepCopy(const char *s) {
   return copy;
 }
 
-// float * deepCopyFloat(const float *s) {
-//   float *copy = (float *) malloc( (strlen(s) + 1) * sizeof(float) );
-//   strcpy(copy, s);
-//   return copy;
-// }
+
