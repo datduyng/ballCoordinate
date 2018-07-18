@@ -8,22 +8,16 @@
  * 1;82,103,12;
  *
  * Where:
- * 2(1st Token): # of coordinate that contain in the package
- * 66(2nd Token,1st Point): represent the color of the ball.represent in ascii of the char 'B'
- * 12(2nd Token,2nd Point): y-axis value being pass
- * 32(2nd Token,3rd Point): z-axis value being pass
-
- * By using ascii number representation of a char, we will ensure getting a valid Character data.
- * Ascii representation:
- * 'B'=66
- * 'b'=98
- * 'R'=82
- * 'r'=114
- * 'G'=71
- * 'g'=103
+ * ;C1,x1,y1,z1;C2,x2,y2,z2;.....; 
+ * ;1,5,12,32;0,12,43,53;
+ * ;1,3,103,12;
  *
- * Unit: Raspbery pi will pass pixel value
- */
+ * Where:
+ * C: color where ( R:0, g:1, b:2)
+ * x: x-axis value being pass. 
+ * y: y-axis value being pass
+ * z: z-axis value being pass
+*/
 
  #ifndef BALL_COORDINATES   /* Include guard */
  #define BALL_COORDINATES
