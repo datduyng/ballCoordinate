@@ -39,6 +39,7 @@
 extern char dataStream[DATALENGTH];
 extern uint8_t* color;
 extern uint8_t* simpleCoordinate;
+extern int16_t* x;
 extern int16_t * y;
 extern int16_t* z;
 extern uint8_t column;

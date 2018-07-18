@@ -9,6 +9,7 @@ uint8_t numOfPoint;
 
 uint8_t* color;
 uint8_t* simpleCoordinate;
+int16_t* x;
 int16_t* y;
 int16_t* z;
 
@@ -61,8 +62,17 @@ bool parseData(void){
   char **stringToken = NULL;
   stringToken = split(dataStream,';',&numOfPoint);
 
-  //store number of coordinate is passing
-  numOfPoint = atoi(stringToken[0]);
+  // ;1,3,4,5;2,4,1,3;
+  numOfPoint -= 2; // minus end and start delimiter.
+
+  if(numOfPoint < 1){
+    Serial.println("insecure package. package does not covered by delimter"); 
+    return false; 
+  }
+
+   //counting coordinate that have apple. 
+
+  // numOfPoint = atoi(stringToken[0]);
 
   //TODO: error checking
 
@@ -70,20 +80,21 @@ bool parseData(void){
   //create dynamic array size.
   // make sure it only have a size of 1 or 2 acordingly to numOfPoint.
   color = (uint8_t*) malloc(sizeof(uint8_t) * numOfPoint);
+  x = (int16_t*) malloc(sizeof(int16_t) * numOfPoint);
   y = (int16_t*) malloc(sizeof(int16_t) * numOfPoint);
   z = (int16_t*) malloc(sizeof(int16_t) * numOfPoint);
-  // transformation from pixel coordinate relative to the camera
-  // To coordinate that respect to the Robot Arm
+
 
   char **pointToken = NULL;
   for(int i = 0;i < numOfPoint; i++){
     uint8_t n = 0 ;// dummies varable for debug or output valiedation
-    pointToken = split(stringToken[i+1],',',&n);
+    pointToken = split(stringToken[i],',',&n);
 
     //deposit in to global variable
     color[i] = atoi(pointToken[0]);
-    y[i] = atoi(pointToken[1]);
-    z[i] = atoi(pointToken[2]);
+    x[i] = atoi(pointToken[1]);
+    y[i] = atoi(pointToken[2]);
+    z[i] = atoi(pointToken[3]);
   }
 
 
@@ -100,7 +111,7 @@ bool parseData(void){
 
 void printPoint(){
   for(int i = 0; i<numOfPoint;i++){
-    Serial.print(color[i]);Serial.print(",");Serial.print(y[i]);Serial.print(",");Serial.print(z[i]);
+    Serial.print(color[i]);Serial.print(",");Serial.print(x[i]);Serial.print(",");Serial.print(y[i]);Serial.print(",");Serial.print(z[i]);
     Serial.println("");
   }
 }
