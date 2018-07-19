@@ -10,9 +10,9 @@ uint8_t numOfPoint;
 
 uint8_t* color;
 uint8_t* simpleCoordinate;
-int16_t* x;
-int16_t* y;
-int16_t* z;
+float* x;
+float* y;
+float* z;
 
 int row1[MAXAPPLE];
 int row2[MAXAPPLE];
@@ -34,6 +34,7 @@ bool getDataStream(int cameraPos){
 
   //don't trust reading if sonaroffset is 1111 or -1111 
   sprintf(package,";%d;%d;",sonaOffset,cameraPos);
+  Serial.print("package sending to rasp -offset,ServoPOs");
   Serial.println(package);
 
   while(Serial.available() == 0 ){}
@@ -71,6 +72,14 @@ bool parseData(void){
     return false; 
   }
 
+  //check if there are any point being pass; 
+  Serial.print("stringtoekn[1]");
+  Serial.println(atoi(stringToken[1]));
+  if(atoi(stringToken[1]) == 404){
+    Serial.println("No apple at this zone"); 
+    return false;
+  }
+
    //counting coordinate that have apple. 
 
   // numOfPoint = atoi(stringToken[0]);
@@ -81,9 +90,9 @@ bool parseData(void){
   //create dynamic array size.
   // make sure it only have a size of 1 or 2 acordingly to numOfPoint.
   color = (uint8_t*) malloc(sizeof(uint8_t) * numOfPoint);
-  x = (int16_t*) malloc(sizeof(int16_t) * numOfPoint);
-  y = (int16_t*) malloc(sizeof(int16_t) * numOfPoint);
-  z = (int16_t*) malloc(sizeof(int16_t) * numOfPoint);
+  x = (float*) malloc(sizeof(float) * numOfPoint);
+  y = (float*) malloc(sizeof(float) * numOfPoint);
+  z = (float*) malloc(sizeof(float) * numOfPoint);
 
 
   char **pointToken = NULL;
@@ -93,9 +102,9 @@ bool parseData(void){
 
     //deposit in to global variable
     color[i] = atoi(pointToken[0]);
-    x[i] = atoi(pointToken[1]);
-    y[i] = atoi(pointToken[2]);
-    z[i] = atoi(pointToken[3]);
+    x[i] = String(pointToken[1]).toFloat();
+    y[i] = String(pointToken[2]).toFloat();
+    z[i] = String(pointToken[3]).toFloat();
   }
 
 
