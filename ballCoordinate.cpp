@@ -19,7 +19,10 @@ int row2[MAXAPPLE];
 int numOfTrig; 
 
 
-bool getDataStream(int cameraPos){
+
+bool getDataStream(char* package){
+  Serial2.begin(115200);
+  Serial.begin(115200);
   numOfTrig ++; 
   // code Reuse from last year competition
 
@@ -27,20 +30,19 @@ bool getDataStream(int cameraPos){
   memset(dataStream, 0, DATALENGTH);
 
   // Serial Communication with Raspberry Pi on Serial port 1 begins
-  Serial.begin(115200);
-  int sonaOffset = sonarDistComparator();
-  // int cameraPos = getCameraFacePosition();
-  char package[30];
+  
+  // // int cameraPos = getCameraFacePosition();
+  // char package[30];
 
-  //don't trust reading if sonaroffset is 1111 or -1111 
-  sprintf(package,";%d;%d;",sonaOffset,cameraPos);
-  Serial.print("package sending to rasp -offset,ServoPOs");
-  Serial.println(package);
+  // //don't trust reading if sonaroffset is 1111 or -1111 
+  // sprintf(package,";%d;%d;",sonaOffset,cameraPos);
+  // Serial.print("package sending to rasp -offset,ServoPOs");
+  Serial2.println(package);
 
-  while(Serial.available() == 0 ){}
+  while(Serial2.available() == 0 ){}
 
   int dataindex = 0;
-  while(Serial.available()> 0){
+  while(Serial2.available()> 0){
 
   // Fills datastream
     if(dataindex < DATALENGTH-1)
@@ -52,7 +54,7 @@ bool getDataStream(int cameraPos){
     delayMicroseconds(100);
   }
   dataStream[dataindex] = '\0'; // Null terminate the string
-  Serial.flush();
+  Serial2.flush();
 
   Serial.print("DataStream(contain): ");Serial.println(dataStream);
   return true;

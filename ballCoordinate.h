@@ -99,7 +99,7 @@ void printSimplePoint(void);
  * data in dataStream char array  variable(gloabl variable)
  * return 1 if valid dataStream length got recieve
  */
-bool getDataStream(int cameraPos);
+bool getDataStream(char* package);
 
 /**
  *This function will parse data by using split function
