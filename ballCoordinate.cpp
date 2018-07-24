@@ -21,7 +21,6 @@ int numOfTrig;
 
 
 bool getDataStream(char* package){
-  Serial2.begin(115200);
   Serial.begin(115200);
   numOfTrig ++; 
   // code Reuse from last year competition
@@ -37,12 +36,12 @@ bool getDataStream(char* package){
   // //don't trust reading if sonaroffset is 1111 or -1111 
   // sprintf(package,";%d;%d;",sonaOffset,cameraPos);
   // Serial.print("package sending to rasp -offset,ServoPOs");
-  Serial2.println(package);
+  Serial.println(package);
 
-  while(Serial2.available() == 0 ){}
+  while(Serial.available() == 0 ){}
 
   int dataindex = 0;
-  while(Serial2.available()> 0){
+  while(Serial.available()> 0){
 
   // Fills datastream
     if(dataindex < DATALENGTH-1)
@@ -54,9 +53,8 @@ bool getDataStream(char* package){
     delayMicroseconds(100);
   }
   dataStream[dataindex] = '\0'; // Null terminate the string
-  Serial2.flush();
+  Serial.flush();
 
-  Serial.print("DataStream(contain): ");Serial.println(dataStream);
   return true;
 }
 
@@ -70,15 +68,15 @@ bool parseData(void){
   numOfPoint -= 2; // minus end and start delimiter.
 
   if(numOfPoint < 1){
-    Serial.println("insecure package. package does not covered by delimter"); 
+    // Serial.println("insecure package. package does not covered by delimter"); 
     return false; 
   }
 
   //check if there are any point being pass; 
-  Serial.print("stringtoekn[1]");
-  Serial.println(atoi(stringToken[1]));
+
+  // Serial.println(atoi(stringToken[1]));
   if(atoi(stringToken[1]) == 404){
-    Serial.println("No apple at this zone"); 
+    // Serial.println("No apple at this zone"); 
     return false;
   }
 
@@ -117,7 +115,7 @@ bool parseData(void){
   free(stringToken);
 
   //TODO: ERROR checking and return true if success ful else return false;
-  printPoint();
+  // printPoint();
   return true;
 }
 
